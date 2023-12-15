@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+    crossorigin="anonymous"
+  />
+    <title>Player Stats</title>
+    <style>
+       section {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    background: url('your-background-image.jpg'); /* Replace 'your-background-image.jpg' with your actual image URL */
+    background-size: cover;
+    backdrop-filter: blur(10px);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    animation: backgroundAnimation 20s infinite alternate linear;
+}
+
+@keyframes backgroundAnimation {
+    0% {
+        filter: brightness(100%);
+    }
+    100% {
+        filter: brightness(120%);
+    }}
+
+        h1 {
+            color: #f57c00;
+            margin-top: 30px;
+            font-size: 3em;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 12px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        th {
+            background-color: #f57c00;
+            color: white;
+            cursor: default;
+        }
+
+        tbody tr {
+            transition: background-color 0.3s;
+        }
+
+        tbody tr:hover {
+            background-color: #ffecb3;
+        }
+
+        @media only screen and (max-width: 600px) {
+            table {
+                width: 100%;
+            }
+        }
+
+        .skeleton-row {
+            height: 20px; /* Adjust the height as needed */
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container">
+        <a class="navbar-brand" href="#"
+          ><span class="text-warning">Balls</span>News</a
+        >
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about.html">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="news.html">News</a>
+            </li>
+            
+            
+           
+            <li class="nav-item">
+                <a class="nav-link" href="login.html">Log Out</a>
+              </li>
+          </ul>
+        </div>
+      </div>
+    </nav> 
+    <section className="buat-player">
+   
+        <h1>Player Statistics</h1>
+    
+        <table id="playerStatsTable">
+            <thead>
+                <tr>
+                    <th>Place</th>
+                    <th>Player Name</th>
+                    <th>Team</th>
+                    <th>Goals</th>
+                    <th>Assists</th>
+                    <th>Penalty Goals</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data will be populated dynamically using JavaScript -->
+                <!-- Skeleton rows for loading -->
+                <tr>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                </tr>
+                <tr>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                    <td class="skeleton-row"></td>
+                </tr>
+                <!-- Repeat the above lines for a total of 10 skeleton rows -->
+            </tbody>
+        </table>
+    
+    </section>
+
+
+<script>
+    // Fetch data from the API
+    fetch('https://apiv2.allsportsapi.com/football/?&met=Topscorers&leagueId=3&APIkey=746ea3c254379df2d43ec17bc5c97c90daeec02eb90ce854da4f0532843d745e')
+        .then(response => response.json())
+        .then(data => {
+            // Access the result array
+            const players = data.result;
+
+            // Get the table body
+            const tableBody = document.querySelector('#playerStatsTable tbody');
+
+            // Remove skeleton rows
+            tableBody.innerHTML = '';
+
+            // Loop through the players and populate the table
+            players.forEach(player => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${player.player_place}</td>
+                    <td>${player.player_name}</td>
+                    <td>${player.team_name}</td>
+                    <td>${player.goals}</td>
+                    <td>${player.assists || 'N/A'}</td>
+                    <td>${player.penalty_goals}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Apply opacity transition after populating the table
+            setTimeout(() => {
+                const tableCells = document.querySelectorAll('th, td');
+                tableCells.forEach(cell => {
+                    cell.style.opacity = '1';
+                });
+            }, 100);
+        })
+        .catch(error => console.error('Error fetching data:', error));
+
+    // Sort table function
+    function sortTable(columnIndex) {
+        const table = document.getElementById('playerStatsTable');
+        const rows = Array.from(table.rows);
+
+        rows.sort((a, b) => {
+            const cellA = a.cells[columnIndex].innerText;
+            const cellB = b.cells[columnIndex].innerText;
+
+            return isNaN(cellA) ? cellA.localeCompare(cellB) : cellA - cellB;
+        });
+
+        table.innerHTML = '';
+
+        rows.forEach(row => {
+            table.appendChild(row);
+        });
+    }
+</script>
+</body>
+</html>
